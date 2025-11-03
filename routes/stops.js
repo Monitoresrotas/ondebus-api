@@ -1,7 +1,13 @@
 import { Router } from "express";
-import stops from "../data/mock_stops.json" with { type: "json" };
 
 const router = Router();
+
+// 🔁 Mock embutido (deixa de depender de /data/mock_stops.json)
+const stops = [
+  { "id": "stp_001", "nome": "Cacém (Estação)", "zona": "Sintra" },
+  { "id": "stp_002", "nome": "Oeiras (Centro)", "zona": "Oeiras" },
+  { "id": "stp_003", "nome": "Rossio", "zona": "Lisboa" }
+];
 
 /**
  * GET /v1/stops?q=texto
