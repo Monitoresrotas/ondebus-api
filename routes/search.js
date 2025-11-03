@@ -1,7 +1,13 @@
 import { Router } from "express";
-import routes from "../data/mock_routes.json" with { type: "json" };
 
 const router = Router();
+
+// 🔁 Mock embutido (deixa de depender de /data/mock_routes.json)
+const routes = [
+  { "id": "rt_101", "linha": "101", "origem": "Cacém", "destino": "Oeiras", "duracaoMin": 42 },
+  { "id": "rt_1523", "linha": "1523", "origem": "Cacém", "destino": "Rossio", "duracaoMin": 55 },
+  { "id": "rt_750", "linha": "750", "origem": "Algés", "destino": "Campo Grande", "duracaoMin": 35 }
+];
 
 /**
  * GET /v1/search?from=...&to=...
