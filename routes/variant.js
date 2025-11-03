@@ -1,15 +1,15 @@
 import { Router } from "express";
-import variants from "../data/mock_variants.json" assert { type: "json" };
+import variants from "../data/mock_variants.json" with { type: "json" };
 
 const router = Router();
 
 /**
  * GET /v1/variant/:id/gpx
- * devolve GPX da variante (mock) para download
+ * Devolve GPX da variante (mock) para download.
  */
 router.get("/:id/gpx", (req, res) => {
   const id = req.params.id;
-  const v = variants.find(x => x.id === id);
+  const v = variants.find((x) => x.id === id);
   if (!v) return res.status(404).send("Variant not found");
 
   const gpx = buildGPX(v);
