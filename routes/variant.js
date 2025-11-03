@@ -1,7 +1,28 @@
 import { Router } from "express";
-import variants from "../data/mock_variants.json" with { type: "json" };
 
 const router = Router();
+
+// 🔁 Mock embutido (deixa de depender de /data/mock_variants.json)
+const variants = [
+  {
+    "id": "var_101_A",
+    "nome": "Linha 101 - Sentido A",
+    "coords": [
+      [-9.3275, 38.7651],
+      [-9.3201, 38.7608],
+      [-9.3142, 38.7369]
+    ]
+  },
+  {
+    "id": "var_101_B",
+    "nome": "Linha 101 - Sentido B",
+    "coords": [
+      [-9.3142, 38.7369],
+      [-9.3201, 38.7608],
+      [-9.3275, 38.7651]
+    ]
+  }
+];
 
 /**
  * GET /v1/variant/:id/gpx
