@@ -1,16 +1,16 @@
 import { Router } from "express";
-import stops from "../data/mock_stops.json" assert { type: "json" };
+import stops from "../data/mock_stops.json" with { type: "json" };
 
 const router = Router();
 
 /**
  * GET /v1/stops?q=texto
- * Filtra por nome (contém, case-insensitive)
+ * Filtra por nome (contém, case-insensitive). Se q vazio, devolve todas.
  */
 router.get("/", (req, res) => {
   const q = (req.query.q || "").toString().trim().toLowerCase();
   if (!q) return res.json(stops);
-  const out = stops.filter(s => s.nome.toLowerCase().includes(q));
+  const out = stops.filter((s) => s.nome.toLowerCase().includes(q));
   res.json(out);
 });
 
