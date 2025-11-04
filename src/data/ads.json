@@ -1,0 +1,22 @@
+[
+  {
+    "id": "AD_01",
+    "title": "Café Sete Rios — pequeno-almoço",
+    "zones": ["Lisboa"],
+    "operators": ["Carris Metropolitana", "CP", "Metro"],
+    "routes": ["R1"],
+    "stops": ["STP_1002"],
+    "cta": "https://exemplo-cafe.pt",
+    "image": "https://picsum.photos/seed/cafe/600/300"
+  },
+  {
+    "id": "AD_02",
+    "title": "Ginásio Baixa — 1ª semana grátis",
+    "zones": ["Lisboa"],
+    "operators": ["Metro"],
+    "routes": ["R3"],
+    "stops": ["STP_5001"],
+    "cta": "https://exemplo-ginasio.pt",
+    "image": "https://picsum.photos/seed/gym/600/300"
+  }
+]
