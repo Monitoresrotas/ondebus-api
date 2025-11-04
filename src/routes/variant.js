@@ -1,45 +1,41 @@
 import { Router } from 'express';
-import { pool, q } from '../db.js';
-import routesMock from '../data/routes.json' with { type: 'json' };
-import { buildGPX } from '../lib/gpx.js';
+import { buildGPXFromLatLngs } from '../utils/gpx.js';
+import { cmPatternsForLine, cmShape } from '../integrations/cm.js';
 
 const router = Router();
 
+// MVP: /v1/variant/:id/gpx?line=XXX
+// Interpretação: :id = patternId (ou shapeId).
+// Se vier ?line=, tentamos pegar o primeiro pattern e respetivo shape.
 router.get('/:id/gpx', async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+    const line = (req.query.line || '').toString();
+    let points = [];
 
-  if (pool) {
-    const shp = await q(
-      `SELECT shape_pt_lat as lat, shape_pt_lon as lon
-       FROM shapes WHERE shape_id=$1 ORDER BY shape_pt_sequence ASC`, [id]);
-    if (!shp.length) {
-      const sts = await q(
-        `SELECT s.stop_lat as lat, s.stop_lon as lon
-         FROM stop_times st JOIN stops s ON st.stop_id=s.stop_id
-         WHERE st.trip_id=$1 ORDER BY st.stop_sequence ASC`, [id]);
-      if (!sts.length) return res.status(404).json({ error: 'shape/trip não encontrado' });
-      const gpx = buildGPX({ name: `Percurso ${id}`, coords: sts.map(p => [p.lat, p.lon]) });
-      res.setHeader('Content-Type', 'application/gpx+xml; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="${id}.gpx"`);
-      return res.send(gpx);
+    if (line) {
+      const patterns = await cmPatternsForLine(line);
+      const pattern = patterns.find(p => p.id === id) || patterns[0];
+      const shapeId = pattern?.shape_id || pattern?.shapeId || pattern?.shape?.id;
+      if (!shapeId) throw new Error('shapeId não encontrado para esta linha/pattern');
+      const shape = await cmShape(shapeId);
+      const coords = shape?.coordinates || shape?.points || shape?.shape || [];
+      points = coords.map(c => Array.isArray(c) ? c : [c.lat ?? c.latitude, c.lon ?? c.longitude]).filter(p => p?.length === 2);
+    } else {
+      // fallback: assumir que :id já é um shapeId
+      const shape = await cmShape(id);
+      const coords = shape?.coordinates || shape?.points || shape?.shape || [];
+      points = coords.map(c => Array.isArray(c) ? c : [c.lat ?? c.latitude, c.lon ?? c.longitude]).filter(p => p?.length === 2);
     }
-    const gpx = buildGPX({ name: `Percurso ${id}`, coords: shp.map(p => [p.lat, p.lon]) });
+
+    if (!points.length) return res.status(404).json({ error: 'Sem pontos para GPX' });
+    const gpx = buildGPXFromLatLngs(points, { name: `ONDEBUS ${id}` });
     res.setHeader('Content-Type', 'application/gpx+xml; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${id}.gpx"`);
-    return res.send(gpx);
+    res.send(gpx);
+  } catch (e) {
+    res.status(502).json({ error: 'Falha ao gerar GPX', detail: String(e).slice(0,300) });
   }
-
-  for (const r of routesMock) {
-    for (const v of r.variants) {
-      if (v.id === id) {
-        const gpx = buildGPX({ name: `${r.name} (${v.direction})`, coords: v.coords });
-        res.setHeader('Content-Type', 'application/gpx+xml; charset=utf-8');
-        res.setHeader('Content-Disposition', `attachment; filename="${v.id}.gpx"`);
-        return res.send(gpx);
-      }
-    }
-  }
-  res.status(404).json({ error: 'Variante não encontrada' });
 });
 
 export default router;
