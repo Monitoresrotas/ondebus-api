@@ -1,32 +1,17 @@
 import { Router } from 'express';
-import { pool, q } from '../db.js';
-import stopsMock from '../data/stops.json' with { type: 'json' };
+import { cmStops } from '../integrations/cm.js';
 
 const router = Router();
 
+// GET /v1/stops?query=amadora
 router.get('/', async (req, res) => {
-  const qstr = (req.query.query || '').toString().trim();
-
-  if (!pool) {
-    const out = qstr
-      ? stopsMock.filter(s => s.name.toLowerCase().includes(qstr.toLowerCase()))
-      : stopsMock.slice(0, 25);
-    return res.json({ count: out.length, stops: out });
+  try {
+    const q = (req.query.query || req.query.q || '').toString();
+    const stops = await cmStops(q);
+    res.json({ count: stops.length, stops });
+  } catch (e) {
+    res.status(502).json({ error: 'Failed to fetch stops', detail: String(e).slice(0,300) });
   }
-
-  if (!qstr) {
-    const rows = await q(
-      'SELECT stop_id as id, stop_name as name, stop_lat as lat, stop_lon as lng, zone_id as zone FROM stops LIMIT 25'
-    );
-    return res.json({ count: rows.length, stops: rows });
-  }
-
-  const rows = await q(
-    `SELECT stop_id as id, stop_name as name, stop_lat as lat, stop_lon as lng, zone_id as zone
-     FROM stops WHERE stop_name ILIKE $1 LIMIT 50`,
-    [`%${qstr}%`]
-  );
-  res.json({ count: rows.length, stops: rows });
 });
 
 export default router;
