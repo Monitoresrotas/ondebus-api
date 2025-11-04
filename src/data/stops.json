@@ -1,0 +1,8 @@
+[
+  { "id": "STP_1001", "name": "Amadora Centro", "lat": 38.753, "lng": -9.230, "zone": "Lisboa" },
+  { "id": "STP_1002", "name": "Sete Rios", "lat": 38.741, "lng": -9.167, "zone": "Lisboa" },
+  { "id": "STP_2001", "name": "Cacém", "lat": 38.767, "lng": -9.300, "zone": "Sintra" },
+  { "id": "STP_3001", "name": "Rossio", "lat": 38.714, "lng": -9.140, "zone": "Lisboa" },
+  { "id": "STP_4001", "name": "Odivelas", "lat": 38.793, "lng": -9.184, "zone": "Lisboa" },
+  { "id": "STP_5001", "name": "Baixa-Chiado", "lat": 38.710, "lng": -9.142, "zone": "Lisboa" }
+]
