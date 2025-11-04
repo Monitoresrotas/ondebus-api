@@ -1,39 +1,29 @@
 import express from 'express';
-import morgan from 'morgan';
-import helmet from 'helmet';
 import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
-import health from './routes/health.js';
-import stops from './routes/stops.js';
-import search from './routes/search.js';
-import ads from './routes/ads.js';
-import variant from './routes/variant.js';
+import healthRouter from './routes/health.js';
+import stopsRouter from './routes/stops.js';
+import searchRouter from './routes/search.js';
+import adsRouter from './routes/ads.js';
+import variantRouter from './routes/variant.js';
 
 const app = express();
 
 app.use(helmet());
-app.use(morgan('tiny'));
+app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'));
 
-const allowed = [
-  'https://ondebus.sbs',
-  'https://www.ondebus.sbs',
-  'http://localhost:5173',
-  'http://localhost:3000'
-];
-app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowed.includes(origin)) return cb(null, true);
-    return cb(new Error('CORS bloqueado'), false);
-  }
-}));
+// raiz devolve 404 (intencional) — só API
+app.head('/', (_, res) => res.sendStatus(404));
+app.get('/',  (_, res) => res.status(404).json({error:'Not found'}));
 
-app.use('/v1/health', health);
-app.use('/v1/stops', stops);
-app.use('/v1/search', search);
-app.use('/v1/ads', ads);
-app.use('/v1/variant', variant);
-
-app.use((req, res) => res.status(404).json({ error: 'Not found' }));
+app.use('/v1/health', healthRouter);
+app.use('/v1/stops', stopsRouter);
+app.use('/v1/search', searchRouter);
+app.use('/v1/ads', adsRouter);
+app.use('/v1/variant', variantRouter);
 
 export default app;
