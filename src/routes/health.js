@@ -1,11 +1,11 @@
 import { Router } from 'express';
 const router = Router();
 
-router.get('/', (_req, res) => {
+router.get('/', (req, res) => {
   res.json({
     status: 'ok',
     name: 'ondebus-api',
-    version: '0.1.0',
+    version: process.env.npm_package_version || 'dev',
     time: new Date().toISOString()
   });
 });
