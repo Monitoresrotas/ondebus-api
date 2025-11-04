@@ -1,0 +1,65 @@
+[
+  {
+    "routeId": "R1",
+    "name": "Amadora → Sete Rios",
+    "operator": "Carris Metropolitana",
+    "zone": "Lisboa",
+    "variants": [
+      {
+        "id": "R1_V1",
+        "direction": "ida",
+        "coords": [
+          [38.753, -9.230],
+          [38.748, -9.210],
+          [38.744, -9.185],
+          [38.741, -9.167]
+        ]
+      },
+      {
+        "id": "R1_V2",
+        "direction": "volta",
+        "coords": [
+          [38.741, -9.167],
+          [38.744, -9.185],
+          [38.748, -9.210],
+          [38.753, -9.230]
+        ]
+      }
+    ]
+  },
+  {
+    "routeId": "R2",
+    "name": "Cacém → Rossio",
+    "operator": "CP",
+    "zone": "Lisboa",
+    "variants": [
+      {
+        "id": "R2_V1",
+        "direction": "ida",
+        "coords": [
+          [38.767, -9.300],
+          [38.750, -9.200],
+          [38.714, -9.140]
+        ]
+      }
+    ]
+  },
+  {
+    "routeId": "R3",
+    "name": "Odivelas → Baixa-Chiado",
+    "operator": "Metro",
+    "zone": "Lisboa",
+    "variants": [
+      {
+        "id": "R3_V1",
+        "direction": "ida",
+        "coords": [
+          [38.793, -9.184],
+          [38.770, -9.170],
+          [38.740, -9.150],
+          [38.710, -9.142]
+        ]
+      }
+    ]
+  }
+]
