@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: ondebus-api
+    env: node
+    rootDir: .
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    autoDeploy: true
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    healthCheckPath: /v1/health
